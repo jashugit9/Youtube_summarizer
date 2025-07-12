@@ -1,9 +1,9 @@
-import streamlit as st
+import streamlit as st #For Back-end
 from youtube_transcript_api import YouTubeTranscriptApi
 from urllib.parse import urlparse, parse_qs
 from transformers import pipeline
 
-# 1. Extract video ID from URL
+# 1. This below function extract video ID from URL
 def extract_video_id(url):
     query = urlparse(url)
     if query.hostname == 'youtu.be':
@@ -13,7 +13,7 @@ def extract_video_id(url):
             return parse_qs(query.query).get('v', [None])[0]
     return None
 
-# 2. Fetch transcript
+# 2. This below function will fetch transcript
 def fetch_transcript(video_id):
     try:
         return YouTubeTranscriptApi.get_transcript(video_id)
@@ -26,7 +26,7 @@ def split_text(text, max_words=400):
     words = text.split()
     return [' '.join(words[i:i+max_words]) for i in range(0, len(words), max_words)]
 
-# 4. Load Hugging Face summarizer
+# 4. Our replacement of OpenAI - Load Hugging Face summarizer
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
 # 5. Summarize the transcript in chunks
@@ -53,7 +53,7 @@ def summarize_transcript(full_text):
 
     return "\n\n".join(summaries)
 
-# 6. Streamlit UI
+# 6. Streamlit Userface 
 st.title("🎬 YouTube Transcript Summarizer")
 st.write("Paste a YouTube video link, and get a summarized version of its transcript.")
 
